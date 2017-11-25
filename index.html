@@ -54,14 +54,11 @@
 
       $("#studentBtn").hide();
       var sum = 0;
-      var students = [];
-
       // count the sum (and average) of students
       data.data.forEach((item) => {
         sum += item.data.students.length;
-        console.log(JSON.stringify(item.data) + "\n\n");
       });
-      // Append to the Modal
+      // Append the average to the Modal
       $("#average").text("The average number of students per section is: " + sum / data.data.length);
       $("#modalAverage").text("The average number of students per section is: " + sum / data.data.length);
 
