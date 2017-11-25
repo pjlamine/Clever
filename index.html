@@ -10,9 +10,8 @@
 
   <body>
     <div id="average" align="right"> </div>
-    <button id="studentBtn" align="center" class="btn btn-lg" data-toggle="modal"
-              data-target="#myModal" onclick="getAvgStudents()">
-               Calculate Average Student Per Class
+    <button id="studentBtn" align="center" class="btn btn-lg"  onclick="getAvgStudents()">
+      Calculate Average Student Per Class
     </button>
 
     <div class="chart"> </div>
@@ -66,6 +65,8 @@
       $("#average").text("The average number of students per section is: " + sum / data.data.length);
       $("#modalAverage").text("The average number of students per section is: " + sum / data.data.length);
 
+      // show the modal
+      $("#myModal").modal()
 
       d3.select(".chart")
         .selectAll("div")
@@ -73,8 +74,8 @@
         .enter().append("div")
           .style("width", function(d) { return d.data.students.length * 20 + "px"; })
           .text(function(d) { return d.data.students.length + " : " + d.data.name;  });
-
     }
+
   </script>
 
   <style>
