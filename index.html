@@ -1,0 +1,91 @@
+<html>
+<!-- figure out the average number of students per section using the DEMO_TOKEN -->
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous">
+  </script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <body>
+    <div id="average" align="right"> </div>
+    <button id="studentBtn" align="center" class="btn btn-lg" data-toggle="modal"
+              data-target="#myModal" onclick="getAvgStudents()">
+               Calculate Average Student Per Class
+    </button>
+
+    <div class="chart"> </div>
+
+
+    <!-- Modal Display of Average Students -->
+ <div class="modal fade" id="myModal" role="dialog">
+   <div class="modal-dialog">
+
+     <!-- Modal content-->
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal"> x </button>
+         <h4 class="modal-title">Modal Header</h4>
+       </div>
+       <div class="modal-body">
+         <p id="modalAverage">The average number of students per section is: </p>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+       </div>
+     </div>
+
+   </div>
+ </div>
+
+  </body>
+
+  <script>
+    function getAvgStudents(){
+      $.ajax({
+               url:"https://api.clever.com/v1.2/sections" ,
+               type: "GET",
+               beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer DEMO_TOKEN');},
+               success: studentCallBack
+            });
+    }
+
+    function studentCallBack(data){
+
+      $("#studentBtn").hide();
+      var sum = 0;
+      var students = [];
+
+      // count the sum (and average) of students
+      data.data.forEach((item) => {
+        sum += item.data.students.length;
+        console.log(JSON.stringify(item.data) + "\n\n");
+      });
+      // Append to the Modal
+      $("#average").text("The average number of students per section is: " + sum / data.data.length);
+      $("#modalAverage").text("The average number of students per section is: " + sum / data.data.length);
+
+
+      d3.select(".chart")
+        .selectAll("div")
+          .data(data.data)
+        .enter().append("div")
+          .style("width", function(d) { return d.data.students.length * 20 + "px"; })
+          .text(function(d) { return d.data.students.length + " : " + d.data.name;  });
+
+    }
+  </script>
+
+  <style>
+  .chart div {
+    font: 12px sans-serif;
+    background-color: steelblue;
+    text-align: bottom;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+  }
+  </style>
+
+</html>
